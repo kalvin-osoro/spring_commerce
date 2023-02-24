@@ -44,9 +44,9 @@ public class ProductController {
     public ResponseEntity<ApiResponse> updateProduct(@PathVariable("productId") Long productId, @RequestBody ProductDto productDto) throws Exception {
         Optional<Category> optionalCategory = categoryRepo.findById(productDto.getCategoryId());
         if (!optionalCategory.isPresent()) {
-            return new ResponseEntity<>(new ApiResponse(false, "Category does not exist"), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<ApiResponse>(new ApiResponse(false, "Category does not exist"), HttpStatus.BAD_REQUEST);
         }
         productService.updateProduct(productDto, productId);
-        return new ResponseEntity<>(new ApiResponse(true, "Product "+ productDto+ " has been added"),HttpStatus.CREATED);
+        return new ResponseEntity<ApiResponse>(new ApiResponse(true, "Product "+ productDto+ " has been added"),HttpStatus.OK);
     }
 }

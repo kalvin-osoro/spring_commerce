@@ -21,4 +21,7 @@ public interface ProductService {
     List<ProductDto> getAllProducts();
 
     void updateProduct(ProductDto productDto, Long productId) throws Exception;
+
+
+    Product findById(Long productId);
 }

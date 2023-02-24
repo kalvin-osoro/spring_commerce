@@ -1,4 +1,4 @@
-package com.ecomerce.guava.exception;
+package com.ecomerce.guava.exceptions;
 
 import org.springframework.web.bind.annotation.ResponseStatus;
 

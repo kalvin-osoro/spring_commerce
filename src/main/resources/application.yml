@@ -13,3 +13,6 @@ spring:
     database: mysql
 #    database-platform: org.hibernate.dialect.MySQLInnoDBDialect
 
+  debug: true
+
+  spring.mvc.pathmatch.matching-strategy: ant_path_matcher

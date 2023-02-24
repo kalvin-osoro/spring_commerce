@@ -1,6 +1,6 @@
 package com.ecomerce.guava.service.impl;
 
-import com.ecomerce.guava.exception.ResourceNotFoundException;
+import com.ecomerce.guava.exceptions.ResourceNotFoundException;
 import com.ecomerce.guava.model.Category;
 import com.ecomerce.guava.repository.CategoryRepo;
 import com.ecomerce.guava.service.CategoryService;

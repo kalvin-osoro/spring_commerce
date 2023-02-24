@@ -1,12 +1,12 @@
 package com.ecomerce.guava.service.impl;
 
 import com.ecomerce.guava.dto.ProductDto;
+import com.ecomerce.guava.exceptions.productNotExistException;
 import com.ecomerce.guava.model.Category;
 import com.ecomerce.guava.model.Product;
 import com.ecomerce.guava.repository.ProductRepo;
 import com.ecomerce.guava.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -67,4 +67,15 @@ public class ProductServiceImpl implements ProductService {
         product.setPrice(productDto.getPrice());
         productRepo.save(product);
     }
+
+    @Override
+    public Product findById(Long productId) throws productNotExistException{
+        Optional<Product> optionalProduct = productRepo.findById(productId);
+        if (optionalProduct.isEmpty()) {
+            throw new productNotExistException("product id is invalid" + productId);
+        }
+        return optionalProduct.get();
+    }
+
+
 }
