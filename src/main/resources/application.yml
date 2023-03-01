@@ -16,3 +16,7 @@ spring:
   debug: true
 
   spring.mvc.pathmatch.matching-strategy: ant_path_matcher
+
+  STRIPE_SECRET_KEY: sk_test_51MevffJ7qeZtbDAlnjOB9rNdQVtptp7nelM4vP8JVXDJUafp2LVEdpOv1PQ7HDTyo8zQt9laJeN56Sbco0SQjDRy00Tk5xLMiu
+
+  BASEURL: http://localhost:8082/

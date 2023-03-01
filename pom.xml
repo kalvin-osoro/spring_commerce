@@ -64,6 +64,11 @@
             <artifactId>spring-data-jpa</artifactId>
             <version>3.0.1</version>
         </dependency>
+		<dependency>
+			<groupId>com.stripe</groupId>
+			<artifactId>stripe-java</artifactId>
+			<version>22.9.0</version>
+		</dependency>
 
         <!--		<dependency>-->
 <!--			<groupId>io.springfox</groupId>-->
