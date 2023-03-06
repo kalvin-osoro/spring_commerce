@@ -1,4 +1,10 @@
 spring:
+  server:
+    port: 8085
+
+  cors:
+    allowed-origins: "*"
+
   datasource:
     url: jdbc:mysql://localhost:3306/guava?useSSL=false&serverTimeZone=UTC*useLegacyDateTimeCode=false
     username: root
@@ -19,4 +25,5 @@ spring:
 
   STRIPE_SECRET_KEY: sk_test_51MevffJ7qeZtbDAlnjOB9rNdQVtptp7nelM4vP8JVXDJUafp2LVEdpOv1PQ7HDTyo8zQt9laJeN56Sbco0SQjDRy00Tk5xLMiu
 
-  BASEURL: http://localhost:8082/
+#  BASEURL: http://localhost:8082/
+
