@@ -4,36 +4,39 @@ import com.ecomerce.guava.exceptions.ResourceNotFoundException;
 import com.ecomerce.guava.model.Category;
 import com.ecomerce.guava.repository.CategoryRepo;
 import com.ecomerce.guava.service.CategoryService;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
+@Transactional
 public class CategoryServiceImpl implements CategoryService {
+//    @Autowired
+    private final CategoryRepo categoryRepo;
 
-    @Autowired
-    private CategoryRepo categoryRepo;
-
-
-//    public void createCategory(Category category) {
-//        categoryRepo.save(category);
-//    }
-//    public List<Category> listCategory() {
-//       return categoryRepo.findAll();
-//    }
-//    public void editCategory()
-
+    public CategoryServiceImpl(CategoryRepo categoryRepo) {
+        this.categoryRepo = categoryRepo;
+    }
+    @Override
+    public List<Category> listCategories() {
+        return categoryRepo.findAll();
+    }
 
     @Override
     public Category createCategory(Category category) {
         return categoryRepo.save(category);
     }
+    @Override
+    public Category readCategory(String categoryName) {
+        return categoryRepo.findByCategoryName(categoryName);
+    }
 
     @Override
-    public List<Category> getAllCategories() {
-        return categoryRepo.findAll();
+    public Optional<Category> readCategory(Integer categoryId) {
+        return categoryRepo.findById(categoryId);
     }
 
     @Override
@@ -43,16 +46,18 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Category updateCategory(Category category, Integer id) {
+    public Category updateCategory(Category category, Integer categoryId) {
         //check whether category with given id exixts
-        Category existingCategory = categoryRepo.findById(id).orElseThrow(
-                () -> new ResourceNotFoundException("Category", "Id", id));
+        Category existingCategory = categoryRepo.findById(categoryId).orElseThrow(
+                () -> new ResourceNotFoundException("Category", "Id", categoryId));
         existingCategory.setCategoryName(category.getCategoryName());
         existingCategory.setDescription(category.getDescription());
+        existingCategory.setProducts(category.getProducts());
         existingCategory.setImageUrl(category.getImageUrl());
         //save existing category to database
         categoryRepo.save(existingCategory);
         return existingCategory;
+        
     }
     @Override
     public void editCategory(int categoryId, Category updateCategory) {
@@ -83,4 +88,6 @@ public class CategoryServiceImpl implements CategoryService {
         categoryRepo.deleteById(categoryId);
 
     }
+
+
 }

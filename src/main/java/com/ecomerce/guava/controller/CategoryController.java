@@ -3,11 +3,15 @@ package com.ecomerce.guava.controller;
 import com.ecomerce.guava.common.ApiResponse;
 import com.ecomerce.guava.model.Category;
 import com.ecomerce.guava.service.CategoryService;
+import com.ecomerce.guava.service.impl.CategoryServiceImpl;
+import org.hibernate.resource.beans.internal.Helper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Objects;
 
@@ -16,22 +20,25 @@ import java.util.Objects;
 @CrossOrigin(origins = "http://localhost:8090")
 public class CategoryController {
     @Autowired
-   private CategoryService categoryService;
+   private CategoryServiceImpl categoryService;
+
+    //list all categories
+    @GetMapping("/list")
+    public ResponseEntity<List<Category>> getCategories() {
+        List<Category> body = categoryService.listCategories();
+        return new ResponseEntity<List<Category>>(body,HttpStatus.OK);
+    }
     //create category
     @PostMapping("/create")
 //    public String createCategory(@RequestBody Category category) {
 //        categoryService.createCategory(category);
 //        return "success" + HttpStatus.CREATED;
 //    }
-    public ResponseEntity<ApiResponse> createCategory(@RequestBody Category category) {
+    public ResponseEntity<ApiResponse> createCategory(@Valid @RequestBody Category category) {
         categoryService.createCategory(category);
         return new ResponseEntity<>(new ApiResponse(true,"created the category: "+category),HttpStatus.CREATED);
     }
-   //list all categories
-    @GetMapping("/list")
-    public List<Category> listCategory() {
-      return categoryService.getAllCategories();
-    }
+
     //get category by id
     @GetMapping("{categoryId}")
     public ResponseEntity<Category> getCategoryById(@PathVariable("categoryId")Integer categoryId) {

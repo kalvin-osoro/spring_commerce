@@ -6,12 +6,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface CategoryService {
 
-    Category createCategory(Category category);
+    List<Category> listCategories();
 
-    List<Category> getAllCategories();
+    Category createCategory(Category category);
 
     Category getCategoryById(Integer id);
 
@@ -24,6 +25,10 @@ public interface CategoryService {
     boolean findById(int categoryId);
 
     void deleteCategory(int categoryId);
+
+    Category readCategory(String categoryName);
+
+    Optional<Category> readCategory(Integer categoryId);
 
 
 //    List<Category> listCategory();

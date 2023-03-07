@@ -1,2 +1,3 @@
-package com.ecomerce.guava.config;public class WebConfig {
+package com.ecomerce.guava.config;
+public class WebConfig {
 }

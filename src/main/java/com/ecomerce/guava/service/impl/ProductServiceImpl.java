@@ -16,7 +16,47 @@ import java.util.Optional;
 @Service
 public class ProductServiceImpl implements ProductService {
     @Autowired
-    ProductRepo productRepo;
+   private ProductRepo productRepo;
+
+    @Override
+    public List<ProductDto> listProducts() {
+        List<Product> products = productRepo.findAll();
+        List<ProductDto> productDtos = new ArrayList<>();
+        for (Product product: products) {
+            ProductDto productDto = getDtoFromProduct(product);
+            productDtos.add(productDto);
+//            productDtos.add(getProductDto(product));
+        }
+        return productDtos;
+    }
+
+
+    private static ProductDto getDtoFromProduct(Product product) {
+        ProductDto productDto = new ProductDto(product);
+        return productDto;
+    }
+    public static Product getProductFromDto(ProductDto productDto, Category category) {
+        Product product = new Product(productDto, category);
+        return product;
+    }
+    @Override
+    public void addProduct(ProductDto productDto, Category category) {
+        Product product = getProductFromDto(productDto, category);
+        productRepo.save(product);
+    }
+    @Override
+    public void updateProduct(Long productId, ProductDto productDto, Category category) {
+        Product product = getProductFromDto(productDto, category);
+        product.setId(productId);
+        productRepo.save(product);
+    }
+    @Override
+    public Product getProductById(Long productId) throws productNotExistException {
+        Optional<Product> optionalProduct = productRepo.findById(productId);
+        if (!optionalProduct.isPresent())
+            throw new productNotExistException("Product id is invalid" + productId);
+        return optionalProduct.get();
+    }
 
 
     @Override
@@ -42,16 +82,11 @@ public class ProductServiceImpl implements ProductService {
         return productDto;
     }
 
+//    @Override
+//    public List<ProductDto> getAllProducts() {
+//        return null;
+//    }
 
-    public List<ProductDto> getAllProducts() {
-       List<Product> allProducts = productRepo.findAll();
-
-       List<ProductDto> productDtos = new ArrayList<>();
-       for (Product product: allProducts) {
-           productDtos.add(getProductDto(product));
-       }
-       return productDtos;
-    }
 
     @Override
     public void updateProduct(ProductDto productDto, Long productId) throws Exception {
