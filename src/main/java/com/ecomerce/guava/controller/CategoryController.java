@@ -26,6 +26,7 @@ public class CategoryController {
     @GetMapping("/list")
     public ResponseEntity<List<Category>> getCategories() {
         List<Category> body = categoryService.listCategories();
+
         return new ResponseEntity<List<Category>>(body,HttpStatus.OK);
     }
     //create category
