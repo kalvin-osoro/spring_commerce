@@ -16,15 +16,26 @@ import java.util.List;
 //@AllArgsConstructor
 //@NoArgsConstructor
 @Entity
-@Table(name = "products")
+@Table(name = "product")
 public class Product {
    @Id
    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private @NotNull String name;
-    private @NotNull String imageURL;
+    @Column(name = "name", nullable = false)
+   private @NotNull String name;
+
+//    @Column(name = "brand", nullable = false)
+//    private @NotNull String brand;
+//    @Column(name = "imageURL", nullable = false)
+//    private @NotNull String imageURL;
+    @Column(name = "price", nullable = false)
     private @NotNull double price;
+    @Column(name = "description", nullable = false)
     private @NotNull String description;
+
+    @Lob
+    @Column(columnDefinition = "MEDIUMBLOB")
+    private String image;
 
     //Many-to-many relationship
  @JsonIgnore
@@ -38,18 +49,21 @@ public class Product {
 
     public Product(ProductDto productDto, Category category) {
         this.name = productDto.getName();
-        this.imageURL = productDto.getImageURL();
+//        this.brand = productDto.getBrand();
+//        this.imageURL = productDto.getImageURL();
         this.description = productDto.getDescription();
         this.price = productDto.getPrice();
         this.category = category;
     }
 
-    public Product(String name, String imageURL, double price, String description, Category category) {
+    public Product(String name, double price, String description, String image, Category category) {
         super();
         this.name = name;
-        this.imageURL = imageURL;
+//        this.brand = brand;
+//        this.imageURL = imageURL;
         this.price = price;
         this.description = description;
+        this.image = image;
         this.category = category;
     }
 
@@ -72,12 +86,26 @@ public class Product {
         this.name = name;
     }
 
-    public String getImageURL() {
-        return imageURL;
-    }
+//    public String getBrand() {
+//        return name;
+//    }
+//
+//    public void setBrand(String name) {
+//        this.name = name;
+//    }
 
-    public void setImageURL(String imageURL) {
-        this.imageURL = imageURL;
+//    public String getImageURL() {
+//        return imageURL;
+//    }
+//
+//    public void setImageURL(String imageURL) {
+//        this.imageURL = imageURL;
+//    }
+    public String getImage() {
+        return image;
+    }
+    public void setImage(String image) {
+        this.image = image;
     }
 
     public double getPrice() {
@@ -109,13 +137,16 @@ public class Product {
         return "Product{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", imageURL='" + imageURL + '\'' +
+//                ", brand='" + brand + '\'' +
+//                ", imageURL='" + imageURL + '\'' +
+                ", image='" + image + '\'' +
                 ", price=" + price +
                 ", description='" + description + '\'' +
                 '}';
     }
 
 
-
+    public void setImageBlob(byte[] imageBytes) {
+    }
 }
 

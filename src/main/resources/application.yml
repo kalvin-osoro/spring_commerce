@@ -6,15 +6,20 @@ spring:
     allowed-origins: "*"
 
 #  jdbc:mysql://localhost:3306/guava?useSSL=false&serverTimeZone=UTC*useLegacyDateTimeCode=false
+#  jdbc:mysql://containers-us-west-45:
+#    railway:
+#      app:5633/railway?useSSL=false&serverTimeZone=UTC*useLegacyDateTimeCode=false:
+#
+#  jdbc:mysql://containers-us-west-45.railway.app:5633/railway?useSSL=false&serverTimeZone=UTC*useLegacyDateTimeCode=false:
   datasource:
-    url: jdbc:mysql://containers-us-west-45.railway.app:5633/railway?useSSL=false&serverTimeZone=UTC*useLegacyDateTimeCode=false
+    url: jdbc:mysql://localhost:3306/apple?useSSL=false&serverTimeZone=UTC*useLegacyDateTimeCode=false
     username: root
-    password: xeIvYqJbYrwVXbzGXEaU
+#    password: xeIvYqJbYrwVXbzGXEaU
     driver-class-name: com.mysql.jdbc.Driver
   jpa:
     hibernate:
       ddl-auto: update
-    show-sql: true
+    show-sql: false
     properties:
       hibernate:
         format_sql: true
@@ -22,6 +27,10 @@ spring:
 #    database-platform: org.hibernate.dialect.MySQLInnoDBDialect
 
   debug: true
+
+  servlet:
+    multipart:
+      location: /static/images/osw-32n - peterjulius tsafaris.jpg
 
   spring.mvc.pathmatch.matching-strategy: ant_path_matcher
 

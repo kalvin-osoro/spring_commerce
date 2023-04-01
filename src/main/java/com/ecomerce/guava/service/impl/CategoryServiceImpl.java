@@ -1,12 +1,15 @@
 package com.ecomerce.guava.service.impl;
 
+import com.ecomerce.guava.dto.CategoryDto;
 import com.ecomerce.guava.exceptions.ResourceNotFoundException;
 import com.ecomerce.guava.model.Category;
 import com.ecomerce.guava.repository.CategoryRepo;
 import com.ecomerce.guava.service.CategoryService;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,9 +23,27 @@ public class CategoryServiceImpl implements CategoryService {
     public CategoryServiceImpl(CategoryRepo categoryRepo) {
         this.categoryRepo = categoryRepo;
     }
+//    @Override
+//    public List<Category> listCategories() {
+//        return categoryRepo.findAll();
+//    }
+
+
     @Override
-    public List<Category> listCategories() {
-        return categoryRepo.findAll();
+    public List<CategoryDto> listCategories(MultipartFile file) {
+        List<Category> categories = categoryRepo.findAll();
+        List<CategoryDto> categoryDtos = new ArrayList<>();
+        for (Category category: categories) {
+            CategoryDto categoryDto = getDtoFromCategory(category, file);
+            categoryDtos.add(categoryDto);
+//            productDtos.add(getProductDto(product));
+        }
+        return categoryDtos;
+    }
+
+    private static CategoryDto getDtoFromCategory(Category category, MultipartFile file) {
+        CategoryDto categoryDto = new CategoryDto(category, file);
+        return categoryDto;
     }
 
     @Override
@@ -52,7 +73,7 @@ public class CategoryServiceImpl implements CategoryService {
                 () -> new ResourceNotFoundException("Category", "Id", categoryId));
         existingCategory.setCategoryName(category.getCategoryName());
         existingCategory.setDescription(category.getDescription());
-        existingCategory.setProducts(category.getProducts());
+//        existingCategory.setProducts(category.getProducts());
         existingCategory.setImageUrl(category.getImageUrl());
         //save existing category to database
         categoryRepo.save(existingCategory);

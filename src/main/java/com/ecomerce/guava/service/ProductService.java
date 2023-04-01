@@ -8,16 +8,21 @@ import com.ecomerce.guava.repository.ProductRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 
 public interface ProductService {
 
 
-    List<ProductDto> listProducts();
+//    List<ProductDto> listProducts();
+     List<ProductDto> listProducts(MultipartFile file);
 
-    void addProduct(ProductDto productDto, Category category);
+
+//    void addProduct(ProductDto productDto, Category category);
+    void addProduct(ProductDto productDto, Category category, MultipartFile imageFile) throws IOException;
 
     void updateProduct(Long productId, ProductDto productDto, Category category);
 
@@ -33,4 +38,7 @@ public interface ProductService {
 
 
     Product findById(Long productId);
+
+//    public void saveProductToDB(MultipartFile file,String name,String description
+//            ,int price);
 }

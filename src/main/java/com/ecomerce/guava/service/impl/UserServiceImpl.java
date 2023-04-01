@@ -57,6 +57,7 @@ public class UserServiceImpl implements UserService {
         user.setLastName(signupDto.getLastName());
         user.setEmail(signupDto.getEmail());
         user.setPassword(encryptedPassword);
+
         userRepository.save(user);
 
         //create the token

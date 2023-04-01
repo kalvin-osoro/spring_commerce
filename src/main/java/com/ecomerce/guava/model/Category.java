@@ -22,12 +22,13 @@ public class Category {
 
    @Column(name = "description")
    private @NotBlank String description;
-   @Column(name = "image_url")
+   @Lob
+   @Column(columnDefinition = "MEDIUMBLOB")
    private @NotBlank String imageUrl;
 
-    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY,
-    cascade = CascadeType.ALL)
-    Set<Product> products;
+//    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY,
+//    cascade = CascadeType.ALL)
+//    Set<Product> products;
 
     public Category() {
 
@@ -60,13 +61,13 @@ public class Category {
         this.description = description;
     }
 
-    public Set<Product> getProducts() {
-        return products;
-    }
+//    public Set<Product> getProducts() {
+//        return products;
+//    }
 
-    public void setProducts(Set<Product> products) {
-        this.products = products;
-    }
+//    public void setProducts(Set<Product> products) {
+//        this.products = products;
+//    }
 
     @Override
     public String toString() {

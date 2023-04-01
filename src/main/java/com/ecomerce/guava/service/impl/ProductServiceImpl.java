@@ -8,8 +8,12 @@ import com.ecomerce.guava.repository.ProductRepo;
 import com.ecomerce.guava.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,11 +23,11 @@ public class ProductServiceImpl implements ProductService {
    private ProductRepo productRepo;
 
     @Override
-    public List<ProductDto> listProducts() {
+    public List<ProductDto> listProducts(MultipartFile file) {
         List<Product> products = productRepo.findAll();
         List<ProductDto> productDtos = new ArrayList<>();
         for (Product product: products) {
-            ProductDto productDto = getDtoFromProduct(product);
+            ProductDto productDto = getDtoFromProduct(product, file);
             productDtos.add(productDto);
 //            productDtos.add(getProductDto(product));
         }
@@ -31,19 +35,49 @@ public class ProductServiceImpl implements ProductService {
     }
 
 
-    private static ProductDto getDtoFromProduct(Product product) {
-        ProductDto productDto = new ProductDto(product);
+    private static ProductDto getDtoFromProduct(Product product, MultipartFile file) {
+        ProductDto productDto = new ProductDto(product, file);
         return productDto;
     }
     public static Product getProductFromDto(ProductDto productDto, Category category) {
         Product product = new Product(productDto, category);
         return product;
     }
-    @Override
-    public void addProduct(ProductDto productDto, Category category) {
+//    @Override
+//    public void addProduct(ProductDto productDto, Category category) {
+//        Product product = getProductFromDto(productDto, category);
+//        productRepo.save(product);
+//    }
+    //add product together with the image blob
+
+    public void addProduct(ProductDto productDto, Category category, MultipartFile imageFile) throws IOException {
+        byte[] imageBytes = imageFile.getBytes();
+//        byte[] imageBytes = Base64.getEncoder().encodeToString();
         Product product = getProductFromDto(productDto, category);
+        product.setImageBlob(imageBytes);
         productRepo.save(product);
     }
+
+    public void saveProductToDB(ProductDto productDto, Category category, MultipartFile file) {
+//        Product product = new Product();
+        Product product = getProductFromDto(productDto, category);
+//        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+//        if (fileName.contains("..")) {
+//
+//            System.out.println("Not a valid file");
+//        }
+//        try {
+//            product.setImage(Base64.getEncoder().encodeToString(file.getBytes()));
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+//        product.setDescription(description);
+//        product.setName(name);
+//        product.setPrice(price);
+
+        productRepo.save(product);
+    }
+
     @Override
     public void updateProduct(Long productId, ProductDto productDto, Category category) {
         Product product = getProductFromDto(productDto, category);
@@ -63,7 +97,7 @@ public class ProductServiceImpl implements ProductService {
     public void createProduct(ProductDto productDto, Category category) {
         Product product = new Product();
         product.setDescription(productDto.getDescription());
-        product.setImageURL(productDto.getImageURL());
+//        product.setImageURL(productDto.getImageURL());
         product.setName(productDto.getName());
         product.setCategory(category);
         product.setPrice(productDto.getPrice());
@@ -74,7 +108,7 @@ public class ProductServiceImpl implements ProductService {
     public ProductDto getProductDto(Product product) {
         ProductDto productDto = new ProductDto();
         productDto.setDescription(product.getDescription());
-        productDto.setImageURL(product.getImageURL());
+//        productDto.setImageURL(product.getImageURL());
         productDto.setName(product.getName());
         productDto.setCategoryId(product.getCategory().getId());
         productDto.setPrice(product.getPrice());
@@ -97,7 +131,7 @@ public class ProductServiceImpl implements ProductService {
         }
         Product product = optionalProduct.get();
         product.setDescription(productDto.getDescription());
-        product.setImageURL(productDto.getImageURL());
+//        product.setImageURL(productDto.getImageURL());
         product.setName(productDto.getName());
         product.setPrice(productDto.getPrice());
         productRepo.save(product);
@@ -111,6 +145,11 @@ public class ProductServiceImpl implements ProductService {
         }
         return optionalProduct.get();
     }
+
+//    @Override
+//    public void saveProductToDB(MultipartFile file, String name, String description, int price) {
+//
+//    }
 
 
 }
