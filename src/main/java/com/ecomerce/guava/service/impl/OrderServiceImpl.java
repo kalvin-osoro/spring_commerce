@@ -15,7 +15,7 @@ import java.util.List;
 @Service
 public class OrderServiceImpl implements OrderService {
 
-//    @Value("${BASEURL}")
+//    @Value("${spring.}")
     private String baseURL = "http://localhost:8082/";
 
 //    @Value("${STRIPE_SECRET_KEY}")

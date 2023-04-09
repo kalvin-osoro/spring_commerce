@@ -9,6 +9,7 @@ import com.ecomerce.guava.model.Product;
 import com.ecomerce.guava.model.User;
 import com.ecomerce.guava.repository.CartRepository;
 import com.ecomerce.guava.service.CartService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,12 +19,12 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class CartServiceImpl implements CartService {
-    @Autowired
-    ProductServiceImpl productService;
 
-    @Autowired
-    CartRepository cartRepository;
+    private final   ProductServiceImpl productService;
+
+     private final CartRepository cartRepository;
 
     @Override
     public void addToCart(AddToCartDto addToCartDto, User user) {

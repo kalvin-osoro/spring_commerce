@@ -11,6 +11,7 @@ import com.ecomerce.guava.model.User;
 import com.ecomerce.guava.repository.UserRepository;
 import com.ecomerce.guava.service.UserService;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,15 +25,14 @@ import jakarta.xml.bind.DatatypeConverter;
 
 
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    @Autowired
-    UserRepository userRepository;
-    @Autowired
-    AuthenticationServiceImpl authenticationService;
+    private final UserRepository userRepository;
+
+     private final AuthenticationServiceImpl authenticationService;
 
     @Transactional
-
     @Override
     public ResponseDto signup(SignupDto signupDto) {
         //check if user is already present
@@ -61,11 +61,11 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
 
         //create the token
-        AuthenticationToken authenticationToken = new AuthenticationToken(user);
+        final AuthenticationToken authenticationToken = new AuthenticationToken(user);
         authenticationService.saveConfirmationToken(authenticationToken);
 
 
-        ResponseDto responseDto = new ResponseDto("success", "User added successfully");
+        ResponseDto responseDto = new ResponseDto("success", "User created successfully");
         return responseDto;
     }
 
@@ -106,8 +106,5 @@ public class UserServiceImpl implements UserService {
         }
         return new SigninResponseDto("Success",token.getToken());
         //return response
-
     }
-
-
 }

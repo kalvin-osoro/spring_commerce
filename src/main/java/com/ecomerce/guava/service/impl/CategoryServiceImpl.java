@@ -5,9 +5,18 @@ import com.ecomerce.guava.exceptions.ResourceNotFoundException;
 import com.ecomerce.guava.model.Category;
 import com.ecomerce.guava.repository.CategoryRepo;
 import com.ecomerce.guava.service.CategoryService;
+import com.ecomerce.guava.service.FileStorageService;
+import com.ecomerce.guava.utils.ImageUtils;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,99 +25,77 @@ import java.util.Optional;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
+@Slf4j
 public class CategoryServiceImpl implements CategoryService {
-//    @Autowired
+
     private final CategoryRepo categoryRepo;
+    private final FileStorageService fileStorageService;
 
-    public CategoryServiceImpl(CategoryRepo categoryRepo) {
-        this.categoryRepo = categoryRepo;
-    }
-//    @Override
-//    public List<Category> listCategories() {
-//        return categoryRepo.findAll();
-//    }
-
+    @Value("${spring.server.name}")
+    private String serverName;
 
     @Override
-    public List<CategoryDto> listCategories(MultipartFile file) {
-        List<Category> categories = categoryRepo.findAll();
-        List<CategoryDto> categoryDtos = new ArrayList<>();
-        for (Category category: categories) {
-            CategoryDto categoryDto = getDtoFromCategory(category, file);
-            categoryDtos.add(categoryDto);
-//            productDtos.add(getProductDto(product));
+    public Object addNewCategory(String categoryDetails, MultipartFile img) {
+
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            CategoryDto categoryDto = mapper.readValue(
+                    categoryDetails, CategoryDto.class);
+            if (categoryDto == null) throw new RuntimeException("Bad request");
+            Category category =new Category();
+            category.setCategoryName(categoryDto.getCategoryName());
+            category.setDescription(categoryDto.getDescription());
+
+
+            Category savedcategory = categoryRepo.save(category);
+
+            if (img.isEmpty()) {
+                throw new RuntimeException("Image file is empty");
+            }
+
+            String imagePath = fileStorageService.saveFileWithSpecificFileNameV(
+                    "product_" + savedcategory.getId() + ".PNG", img, ImageUtils.getSubFolder());
+
+            //save
+            List<String> filePathList = new ArrayList<>();
+            filePathList.add(imagePath);
+            List<String> downloadUrlList = new ArrayList<>();
+            for (String filePath : filePathList) {
+
+                String fileDownLoadUri = UriComponentsBuilder.fromUriString(serverName)
+                        .path("/product/view-product")
+                        .queryParam("fileName", filePath)
+                        .build()
+                        .encode()
+                        .toUriString();
+                log.info("The composed path: " + fileDownLoadUri);
+
+                //save to db
+                category.setImagePath(fileDownLoadUri);
+                categoryRepo.save(category);
+
+
+                log.info("downloadUrl is {}", fileDownLoadUri);
+                log.info("filePath is {}", filePath);
+
+
+            }
+//            return true;
+            return ResponseEntity.ok().body(true);
+        } catch (Exception e) {
+            log.error("Error occurred while adding product", e);
         }
-        return categoryDtos;
-    }
-
-    private static CategoryDto getDtoFromCategory(Category category, MultipartFile file) {
-        CategoryDto categoryDto = new CategoryDto(category, file);
-        return categoryDto;
+        return false;
     }
 
     @Override
-    public Category createCategory(Category category) {
-        return categoryRepo.save(category);
-    }
-    @Override
-    public Category readCategory(String categoryName) {
-        return categoryRepo.findByCategoryName(categoryName);
+    public List<Category> getAllCategories() {
+        return categoryRepo.findAll();
     }
 
     @Override
-    public Optional<Category> readCategory(Integer categoryId) {
+    public Optional<Category> readCategory(Long categoryId) {
         return categoryRepo.findById(categoryId);
     }
-
-    @Override
-    public Category getCategoryById(Integer categoryId) {
-        return categoryRepo.findById(categoryId).orElseThrow(() ->
-                new ResourceNotFoundException("Category", "Id", categoryId));
-    }
-
-    @Override
-    public Category updateCategory(Category category, Integer categoryId) {
-        //check whether category with given id exixts
-        Category existingCategory = categoryRepo.findById(categoryId).orElseThrow(
-                () -> new ResourceNotFoundException("Category", "Id", categoryId));
-        existingCategory.setCategoryName(category.getCategoryName());
-        existingCategory.setDescription(category.getDescription());
-//        existingCategory.setProducts(category.getProducts());
-        existingCategory.setImageUrl(category.getImageUrl());
-        //save existing category to database
-        categoryRepo.save(existingCategory);
-        return existingCategory;
-        
-    }
-    @Override
-    public void editCategory(int categoryId, Category updateCategory) {
-        Category category = categoryRepo.getById(categoryId);
-        category.setCategoryName(category.getCategoryName());
-        category.setDescription(category.getDescription());
-        category.setImageUrl(category.getImageUrl());
-        categoryRepo.save(category);
-    }
-
-    @Override
-    public void deleteCategory(Integer id) {
-        //check if category exists in DB
-        categoryRepo.findById(id).orElseThrow(
-                () -> new ResourceNotFoundException("Category","Id",id));
-        categoryRepo.deleteById(id);
-    }
-
-    @Override
-    public boolean findById(int categoryId) {
-        return categoryRepo.findById(categoryId).isPresent();
-    }
-
-    @Override
-    public void deleteCategory(int categoryId) {
-        categoryRepo.findById(categoryId).orElseThrow(
-                () -> new ResourceNotFoundException("Category","categoryId",categoryId));
-        categoryRepo.deleteById(categoryId);
-
-    }
-
-
 }

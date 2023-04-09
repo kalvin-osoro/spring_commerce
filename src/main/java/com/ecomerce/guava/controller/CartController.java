@@ -8,6 +8,7 @@ import com.ecomerce.guava.model.User;
 import com.ecomerce.guava.service.impl.AuthenticationServiceImpl;
 import com.ecomerce.guava.service.impl.CartServiceImpl;
 import com.ecomerce.guava.service.impl.ProductServiceImpl;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,14 +17,14 @@ import org.springframework.web.bind.annotation.*;
 import java.security.PublicKey;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/cart")
+@CrossOrigin(origins = "*")
 public class CartController {
 
-    @Autowired
-    private CartServiceImpl cartService;
+    private final CartServiceImpl cartService;
 
-    @Autowired
-    private AuthenticationServiceImpl authenticationService;
+    private final AuthenticationServiceImpl authenticationService;
 
 
     //post cart api
@@ -48,7 +49,7 @@ public class CartController {
 
         //find the user
         User user = authenticationService.getUser(token);
-
+        //get cart items
         CartDto cartDto = cartService.listCartItems(user);
         return new ResponseEntity<>(cartDto, HttpStatus.OK);
     }

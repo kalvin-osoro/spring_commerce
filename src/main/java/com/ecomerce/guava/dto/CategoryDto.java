@@ -2,27 +2,27 @@ package com.ecomerce.guava.dto;
 
 import com.ecomerce.guava.model.Category;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.util.Base64;
 
-@Data
-@Builder
+@Getter
+@Setter
+@RequiredArgsConstructor
 @AllArgsConstructor
-@NoArgsConstructor
-@Entity
 public class CategoryDto {
+
+    //for create it can be optional
+    //we need it for update
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @NotBlank
     private String categoryName;
@@ -30,23 +30,21 @@ public class CategoryDto {
     @NotBlank
     private String description;
 
-    @Lob
-    @Column(name = "image", columnDefinition = "BLOB")
-    private byte[] image;
+    private String imagePath;
 
-    public CategoryDto(Category category, MultipartFile file) {
-        this.setId(category.getId());
-        this.setCategoryName(category.getCategoryName());
-        this.setDescription(category.getDescription());
-
-        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-        if (fileName.contains("..")) {
-            System.out.println("Not a valid file");
-        }
-        try {
-            this.setImage(file.getBytes());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
+//    public CategoryDto(Category category, MultipartFile file) {
+//        this.setId(category.getId());
+//        this.setCategoryName(category.getCategoryName());
+//        this.setDescription(category.getDescription());
+//
+//        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+//        if (fileName.contains("..")) {
+//            System.out.println("Not a valid file");
+//        }
+//        try {
+//            this.setImage(file.getBytes());
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
 }

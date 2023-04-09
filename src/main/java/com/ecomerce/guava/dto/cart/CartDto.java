@@ -1,16 +1,12 @@
 package com.ecomerce.guava.dto.cart;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
-@Data
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
+@RequiredArgsConstructor
+@Getter
+@Setter
 public class CartDto {
     private List<CartItemDto> cartItems;
     private double totalCost;

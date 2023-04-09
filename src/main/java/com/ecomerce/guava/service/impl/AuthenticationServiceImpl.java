@@ -5,16 +5,18 @@ import com.ecomerce.guava.model.AuthenticationToken;
 import com.ecomerce.guava.model.User;
 import com.ecomerce.guava.repository.TokenRepository;
 import com.ecomerce.guava.service.AuthenticationService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
 
 @Service
+@RequiredArgsConstructor
 public class AuthenticationServiceImpl implements AuthenticationService {
 
-    @Autowired
-    TokenRepository tokenRepository;
+
+     private final TokenRepository tokenRepository;
 
     @Override
     public void saveConfirmationToken(AuthenticationToken authenticationToken) {
@@ -27,7 +29,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public void authenticate(String token) {
+    public void authenticate(String token) throws AuthenticationFailException{
         //null check
         if (Objects.isNull(token)) {
             //throw an exception

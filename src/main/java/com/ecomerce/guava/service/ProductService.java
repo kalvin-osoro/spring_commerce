@@ -16,29 +16,12 @@ import java.util.List;
 
 public interface ProductService {
 
+    Object addNewProduct(String productDetails,
+                         MultipartFile img
+    );
 
-//    List<ProductDto> listProducts();
-     List<ProductDto> listProducts(MultipartFile file);
+    List<Product> getAllProducts();
 
+    Product findById(Long productId) throws productNotExistException;
 
-//    void addProduct(ProductDto productDto, Category category);
-    void addProduct(ProductDto productDto, Category category, MultipartFile imageFile) throws IOException;
-
-    void updateProduct(Long productId, ProductDto productDto, Category category);
-
-    Product getProductById(Long productId) throws productNotExistException;
-
-    void createProduct(ProductDto productDto, Category category);
-
-    public ProductDto getProductDto(Product product);
-
-//    List<ProductDto> getAllProducts();
-
-    void updateProduct(ProductDto productDto, Long productId) throws Exception;
-
-
-    Product findById(Long productId);
-
-//    public void saveProductToDB(MultipartFile file,String name,String description
-//            ,int price);
 }

@@ -1,15 +1,11 @@
 package com.ecomerce.guava.dto.user;
 
 import jakarta.persistence.Access;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Data
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
+@RequiredArgsConstructor
+@Getter
+@Setter
 public class SigninDto {
     private String email;
     private String password;

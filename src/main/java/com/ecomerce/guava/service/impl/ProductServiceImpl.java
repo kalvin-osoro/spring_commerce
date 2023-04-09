@@ -5,11 +5,19 @@ import com.ecomerce.guava.exceptions.productNotExistException;
 import com.ecomerce.guava.model.Category;
 import com.ecomerce.guava.model.Product;
 import com.ecomerce.guava.repository.ProductRepo;
+import com.ecomerce.guava.service.FileStorageService;
 import com.ecomerce.guava.service.ProductService;
+import com.ecomerce.guava.utils.ImageUtils;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -17,139 +25,114 @@ import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 
+
+@Slf4j
+@RequiredArgsConstructor
 @Service
 public class ProductServiceImpl implements ProductService {
-    @Autowired
-   private ProductRepo productRepo;
+
+    private final ProductRepo productRepository;
+
+    private final FileStorageService fileStorageService;
+
+
+    @Value("${spring.server.name}")
+    private String serverName;
+
+
 
     @Override
-    public List<ProductDto> listProducts(MultipartFile file) {
-        List<Product> products = productRepo.findAll();
-        List<ProductDto> productDtos = new ArrayList<>();
-        for (Product product: products) {
-            ProductDto productDto = getDtoFromProduct(product, file);
-            productDtos.add(productDto);
-//            productDtos.add(getProductDto(product));
-        }
-        return productDtos;
-    }
+    public Object addNewProduct(String productDetails,
+                                MultipartFile img
+    ) {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            ProductDto productDto = mapper.readValue(
+                    productDetails, ProductDto.class);
+            if (productDto == null) throw new RuntimeException("Bad request");
+            Product product =new Product();
+
+//            productDto.setName(product.getName());
+//            productDto.setPrice(product.getPrice());
+//            productDto.setDescription(product.getDescription());
+//            productDto .setCategoryId(product.getCategory().getId());
 
 
-    private static ProductDto getDtoFromProduct(Product product, MultipartFile file) {
-        ProductDto productDto = new ProductDto(product, file);
-        return productDto;
-    }
-    public static Product getProductFromDto(ProductDto productDto, Category category) {
-        Product product = new Product(productDto, category);
-        return product;
-    }
-//    @Override
-//    public void addProduct(ProductDto productDto, Category category) {
-//        Product product = getProductFromDto(productDto, category);
-//        productRepo.save(product);
-//    }
-    //add product together with the image blob
 
-    public void addProduct(ProductDto productDto, Category category, MultipartFile imageFile) throws IOException {
-        byte[] imageBytes = imageFile.getBytes();
-//        byte[] imageBytes = Base64.getEncoder().encodeToString();
-        Product product = getProductFromDto(productDto, category);
-        product.setImageBlob(imageBytes);
-        productRepo.save(product);
-    }
 
-    public void saveProductToDB(ProductDto productDto, Category category, MultipartFile file) {
-//        Product product = new Product();
-        Product product = getProductFromDto(productDto, category);
-//        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-//        if (fileName.contains("..")) {
+            product.setName(productDto.getName());
+            product.setPrice(productDto.getPrice());
+            product.setDescription(productDto.getDescription());
+//            product.setCategory(product.getCategory().getId());
+//            product.setCategoryId(product.getCategory().getId());
+
+
+//            productRepository.save(product);
+
+            Product savedProduct = productRepository.save(product);
+
+            if (img.isEmpty()) {
+                throw new RuntimeException("Image file is empty");
+            }
 //
-//            System.out.println("Not a valid file");
-//        }
-//        try {
-//            product.setImage(Base64.getEncoder().encodeToString(file.getBytes()));
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
-//        product.setDescription(description);
-//        product.setName(name);
-//        product.setPrice(price);
+////          Product savedproduct = productRepository.save(product);
 
-        productRepo.save(product);
-    }
+            String imagePath = fileStorageService.saveFileWithSpecificFileNameV(
+                    "product_" + savedProduct.getId() + ".PNG", img, ImageUtils.getSubFolder());
+//
 
-    @Override
-    public void updateProduct(Long productId, ProductDto productDto, Category category) {
-        Product product = getProductFromDto(productDto, category);
-        product.setId(productId);
-        productRepo.save(product);
-    }
-    @Override
-    public Product getProductById(Long productId) throws productNotExistException {
-        Optional<Product> optionalProduct = productRepo.findById(productId);
-        if (!optionalProduct.isPresent())
-            throw new productNotExistException("Product id is invalid" + productId);
-        return optionalProduct.get();
-    }
+            //save
+            List<String> filePathList = new ArrayList<>();
+            filePathList.add(imagePath);
+            List<String> downloadUrlList = new ArrayList<>();
+            for (String filePath : filePathList) {
+//                String downloadUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
 
+//                        .path("/upload/" + ImageUtils.getSubFolder() + "/")
+//                        .path(filePath)
+//                        .toUriString();
+//                downloadUrlList.add(downloadUrl);
 
-    @Override
-    public void createProduct(ProductDto productDto, Category category) {
-        Product product = new Product();
-        product.setDescription(productDto.getDescription());
-//        product.setImageURL(productDto.getImageURL());
-        product.setName(productDto.getName());
-        product.setCategory(category);
-        product.setPrice(productDto.getPrice());
-        productRepo.save(product);
+                String fileDownLoadUri = UriComponentsBuilder.fromUriString(serverName)
+                        .path("/product/view-product")
+                        .queryParam("fileName", filePath)
+                        .build()
+                        .encode()
+                        .toUriString();
+                log.info("The composed path: " + fileDownLoadUri);
 
-    }
-
-    public ProductDto getProductDto(Product product) {
-        ProductDto productDto = new ProductDto();
-        productDto.setDescription(product.getDescription());
-//        productDto.setImageURL(product.getImageURL());
-        productDto.setName(product.getName());
-        productDto.setCategoryId(product.getCategory().getId());
-        productDto.setPrice(product.getPrice());
-        productDto.setId(product.getId());
-        return productDto;
-    }
-
-//    @Override
-//    public List<ProductDto> getAllProducts() {
-//        return null;
-//    }
+                //save to db
+                product.setImagePath(fileDownLoadUri);
+                productRepository.save(product);
 
 
-    @Override
-    public void updateProduct(ProductDto productDto, Long productId) throws Exception {
-       Optional<Product> optionalProduct = productRepo.findById(productId);
-       //throw an exception if product does not exist
-        if (!optionalProduct.isPresent()) {
-            throw new Exception("Product not present");
+                log.info("downloadUrl is {}", fileDownLoadUri);
+                log.info("filePath is {}", filePath);
+
+
+            }
+//            return true;
+            return ResponseEntity.ok().body(true);
+        } catch (Exception e) {
+            log.error("Error occurred while adding product", e);
         }
-        Product product = optionalProduct.get();
-        product.setDescription(productDto.getDescription());
-//        product.setImageURL(productDto.getImageURL());
-        product.setName(productDto.getName());
-        product.setPrice(productDto.getPrice());
-        productRepo.save(product);
+        return false;
     }
 
+
+
     @Override
-    public Product findById(Long productId) throws productNotExistException{
-        Optional<Product> optionalProduct = productRepo.findById(productId);
+    public List<Product> getAllProducts() {
+        return productRepository.findAll();
+    }
+
+    public Product findById(Long productId) throws productNotExistException {
+        Optional<Product> optionalProduct = productRepository.findById(productId);
+
         if (optionalProduct.isEmpty()) {
-            throw new productNotExistException("product id is invalid" + productId);
+            throw new productNotExistException("Product id is invalid: " + productId);
         }
         return optionalProduct.get();
     }
-
-//    @Override
-//    public void saveProductToDB(MultipartFile file, String name, String description, int price) {
-//
-//    }
-
 
 }

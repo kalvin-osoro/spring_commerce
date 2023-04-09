@@ -2,15 +2,11 @@ package com.ecomerce.guava.dto.cart;
 
 import com.ecomerce.guava.model.Cart;
 import com.ecomerce.guava.model.Product;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Data
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
+@RequiredArgsConstructor
+@Getter
+@Setter
 public class CartItemDto {
     private Long id;
     private Integer quantity;

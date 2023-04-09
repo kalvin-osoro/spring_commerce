@@ -1,14 +1,10 @@
 package com.ecomerce.guava.dto.checkout;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Data
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
+@RequiredArgsConstructor
+@Getter
+@Setter
 public class CheckoutItemDto {
     private String productName;
     private int quantity;

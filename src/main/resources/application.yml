@@ -1,6 +1,8 @@
 spring:
   server:
     port: 8085
+    name: http://localhost:8080/
+
 
   cors:
     allowed-origins: "*"
@@ -12,7 +14,7 @@ spring:
 #
 #  jdbc:mysql://containers-us-west-45.railway.app:5633/railway?useSSL=false&serverTimeZone=UTC*useLegacyDateTimeCode=false:
   datasource:
-    url: jdbc:mysql://localhost:3306/apple?useSSL=false&serverTimeZone=UTC*useLegacyDateTimeCode=false
+    url: jdbc:mysql://localhost:3306/guava?useSSL=false&serverTimeZone=UTC*useLegacyDateTimeCode=false
     username: root
 #    password: xeIvYqJbYrwVXbzGXEaU
     driver-class-name: com.mysql.jdbc.Driver
@@ -36,5 +38,5 @@ spring:
 
   STRIPE_SECRET_KEY: sk_test_51MevffJ7qeZtbDAlnjOB9rNdQVtptp7nelM4vP8JVXDJUafp2LVEdpOv1PQ7HDTyo8zQt9laJeN56Sbco0SQjDRy00Tk5xLMiu
 
-#  BASEURL: http://localhost:8082/
+  BASEURL: http://localhost:8080/
 
