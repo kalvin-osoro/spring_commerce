@@ -12,6 +12,7 @@ import com.ecomerce.guava.service.ProductService;
 import com.ecomerce.guava.service.impl.CategoryServiceImpl;
 import com.ecomerce.guava.service.impl.ImageServiceImpl;
 import com.ecomerce.guava.service.impl.ProductServiceImpl;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,36 +38,71 @@ public class ProductController {
     private final ProductService productService;
 //    private final ProductDto productDto;
     private final FileStorageService fileStorageService;
+    private final CategoryRepo categoryRepo;
 
-    private final CategoryService categoryService;
 
 
     //get all products
-    @GetMapping("/")
-    public ResponseEntity<List<Product>> getAllProducts() {
-        List<Product> productList = productService.getAllProducts();
-        return new ResponseEntity<>(productList, HttpStatus.OK);
+//    @GetMapping("/")
+//    public ResponseEntity<List<Product>> getAllProducts() {
+//        List<Product> productList = productService.getAllProducts();
+//        return new ResponseEntity<>(productList, HttpStatus.OK);
+//    }
+    //code that does the job
+    @GetMapping("/p")
+    public ResponseEntity<List<ProductDto>> getProducts() {
+        List<ProductDto> products = productService.getProducts();
+        return new ResponseEntity<>(products,HttpStatus.OK);
     }
 
     @PostMapping("/add-product")
     public ResponseEntity<ApiResponse> addProduct(@RequestParam("productDetails") String productDetails,
-                                                  @RequestParam ("img") MultipartFile img) {
-//        Optional<Category> optionalCategory = categoryService.readCategory(productDto.getCategoryId());
-//        if (!optionalCategory.isPresent()) {
-//            return new ResponseEntity<ApiResponse>(new ApiResponse(false, "Category does not exist"), HttpStatus.CONFLICT);
-//        }
-//        Category category = optionalCategory.get();
-//        productService.saveProductToDB(productDto,category);
-        Object product = productService.addNewProduct(productDetails, img);
-        boolean success = product != null;
-
-        //response
-        if (success) {
-            return new ResponseEntity<>(new ApiResponse(true, "Product has been added"), HttpStatus.CREATED);
-        } else {
-            return new ResponseEntity<>(new ApiResponse(false, "Product not added!"), HttpStatus.CREATED);
+                                                  @RequestParam("img") MultipartFile img) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        ProductDto productDto;
+        try {
+            productDto = objectMapper.readValue(productDetails, ProductDto.class);
+        } catch (JsonProcessingException e) {
+            return new ResponseEntity<>(new ApiResponse(false, "Error converting product details"), HttpStatus.BAD_REQUEST);
         }
+
+        Optional<Category> optionalCategory = categoryRepo.findById(productDto.getCategoryId());
+        if (!optionalCategory.isPresent()) {
+            return new ResponseEntity<>(new ApiResponse(false, "Category does not exist"), HttpStatus.BAD_REQUEST);
+        }
+
+        productService.createProduct(productDto, img, optionalCategory.get());
+
+        return new ResponseEntity<>(new ApiResponse(true, "Product has been added"), HttpStatus.CREATED);
     }
+
+    //............................................................................................................................
+
+
+//    @PostMapping("/add-product")
+//    public ResponseEntity<ApiResponse> addProduct(@RequestParam("productDetails") String productDetails,
+//                                                  @RequestParam("img") MultipartFile img) {
+//        ObjectMapper objectMapper = new ObjectMapper();
+//        ProductDto productDto;
+//        try {
+//            productDto = objectMapper.readValue(productDetails, ProductDto.class);
+//        } catch (JsonProcessingException e) {
+//            return new ResponseEntity<>(new ApiResponse(false, "Error converting product details"), HttpStatus.BAD_REQUEST);
+//        }
+//
+//        Optional<Category> optionalCategory = categoryRepo.findById(productDto.getCategoryId());
+//        if (!optionalCategory.isPresent()) {
+//            return new ResponseEntity<>(new ApiResponse(false, "Category does not exist"), HttpStatus.BAD_REQUEST);
+//        }
+//
+//        productService.createProduct(productDto, img, optionalCategory.get());
+//
+//        return new ResponseEntity<>(new ApiResponse(true, "Product has been added"), HttpStatus.CREATED);
+//    }
+
+    //............................................................................................................................
+
+
 
     @GetMapping("/view-product")
     public ResponseEntity<Resource> getFileByName(@RequestParam (value="fileName")String fileName)
@@ -97,6 +133,37 @@ public class ProductController {
         }
     }
 
+    @PostMapping("/update/{productId}")
+    public ResponseEntity<ApiResponse> editProduct(@PathVariable("productId") Long productId,
+                                                   @RequestParam("productDetails") String productDetails,
+                                                   @RequestParam("img") MultipartFile img) throws Exception {
+        ObjectMapper objectMapper = new ObjectMapper();
+        ProductDto productDto;
+        try {
+            productDto = objectMapper.readValue(productDetails, ProductDto.class);
+        } catch (JsonProcessingException e) {
+            return new ResponseEntity<>(new ApiResponse(false, "Error converting product details"), HttpStatus.BAD_REQUEST);
+        }
+
+        Optional<Category> optionalCategory = categoryRepo.findById(productDto.getCategoryId());
+        if (!optionalCategory.isPresent()) {
+            return new ResponseEntity<>(new ApiResponse(false, "Category does not exist"), HttpStatus.BAD_REQUEST);
+        }
+
+        productService.editProduct(productId,productDto, img);
+        return new ResponseEntity<>(new ApiResponse(true, "Product has been updated"), HttpStatus.OK);
+    }
+
+    @DeleteMapping("delete/{productId}")
+    public ResponseEntity<ApiResponse> deleteCategory(@PathVariable ("productId") Long productId) {
+
+        //authenticate the token
+
+        productService.deleteProduct(productId);
+        return new  ResponseEntity<>(new ApiResponse(true, "product has been removed"), HttpStatus.OK);
+    }
+
+
     //create an api to edit the product
 //    @PostMapping("/update/{productId}")
 //    public ResponseEntity<ApiResponse> updateProduct(@PathVariable("productId") Long productId, @RequestBody @Valid ProductDto productDto) throws Exception {
@@ -108,4 +175,8 @@ public class ProductController {
 //        productService.updateProduct(productId, productDto, category );
 //        return new ResponseEntity<ApiResponse>(new ApiResponse(true, "Product "+ productDto+ " has been updated"),HttpStatus.OK);
 //    }
+
+//    @PostMapping("update/{productId}")
+//    public ResponseEntity<ApiResponse> updateProduct(@PathVariable("productId") Long productId,
+//                                                     @)
 }

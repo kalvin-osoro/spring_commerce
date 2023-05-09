@@ -13,7 +13,10 @@ import lombok.RequiredArgsConstructor;
 import org.hibernate.resource.beans.internal.Helper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -45,10 +48,10 @@ public class CategoryController {
     }
 
     //create category
+    @PostMapping("/add-category")
 
-    @PostMapping("/add-product")
     public ResponseEntity<ApiResponse> addCategory(@RequestParam("categoryDetails") String categoryDetails,
-                                                  @RequestParam ("img") MultipartFile img) {
+                                                  @RequestParam ("image") MultipartFile img) {
 
 
 
@@ -61,6 +64,57 @@ public class CategoryController {
         } else {
             return new ResponseEntity<>(new ApiResponse(false, "category not added!"), HttpStatus.CREATED);
         }
+    }
+
+    @GetMapping("/view-category")
+    public ResponseEntity<Resource> getFileByName(@RequestParam (value="fileName")String fileName)
+    {
+        try {
+            Resource file = fileStorageService.loadFileAsResourceByName(fileName);
+            if (fileName.endsWith("PNG") || fileName.endsWith("png")) {
+                return ResponseEntity.ok()
+                        .header(HttpHeaders.CONTENT_DISPOSITION, "inline;filename=\"" + file.getFilename() + "\"")
+                        .header(HttpHeaders.CONTENT_TYPE, MediaType.IMAGE_JPEG_VALUE)
+                        .body(file);
+            } else {
+                //return pdf
+                return ResponseEntity.ok()
+                        .header(HttpHeaders.CONTENT_DISPOSITION, "inline;filename=\"" + file.getFilename() + "\"")
+                        .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_PDF_VALUE)
+                        .body(file);
+            }
+//            MediaType mediaType = (file.getFilename().endsWith("PNG")) ? MediaType.IMAGE_PNG : MediaType.IMAGE_JPEG;
+
+//            return ResponseEntity.ok()
+//                    .header(HttpHeaders.CONTENT_DISPOSITION, "inline;filename=\"" + file.getFilename() + "\"")
+//                    .contentType(mediaType)
+//                    .body(file);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @PostMapping("/update/{categoryId}")
+    public ResponseEntity<ApiResponse> updateCategory(@PathVariable("categoryId") Long categoryId,
+                                                      @RequestParam("categoryDetails") String categoryDetails,
+                                                      @RequestParam("image") MultipartFile file) {
+
+        if (!categoryService.findById(categoryId)) {
+            return new ResponseEntity<ApiResponse>(new ApiResponse(false, "category does not exist"), HttpStatus.NOT_FOUND);
+        }
+        categoryService.editCategory(categoryId, categoryDetails, file );
+        return new ResponseEntity<ApiResponse>(new ApiResponse(true, "category has been updated"), HttpStatus.OK);
+
+    }
+
+    @DeleteMapping("delete/{categoryId}")
+    public ResponseEntity<ApiResponse> deleteCategory(@PathVariable ("categoryId") Long categoryId) {
+
+        //authenticate the token
+
+        categoryService.deleteCategory(categoryId);
+        return new  ResponseEntity<>(new ApiResponse(true, "category has been removed"), HttpStatus.OK);
     }
 
     //get category by id

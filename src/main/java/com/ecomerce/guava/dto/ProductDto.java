@@ -28,8 +28,6 @@ public class ProductDto {
 
     private @NotNull double price;
     private @NotNull String description;
-
-
     private String path;
 
     private @NotNull Long categoryId;

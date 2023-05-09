@@ -39,9 +39,9 @@ public class Product {
 
     //Many-to-many relationship
 // @JsonIgnore
-// @ManyToOne(fetch = FetchType.LAZY, optional = false)
-// @JoinColumn(name = "category_id", nullable = false)
-//    Category category;
+ @ManyToOne(fetch = FetchType.LAZY, optional = false)
+ @JoinColumn(name = "category_id", nullable = false)
+    Category category;
 
 //    @JsonIgnore
 //    @OneToMany(fetch = FetchType.LAZY, mappedBy = "product")
