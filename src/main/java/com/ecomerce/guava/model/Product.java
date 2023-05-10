@@ -38,7 +38,7 @@ public class Product {
 //    private @NotNull Long categoryId;
 
     //Many-to-many relationship
-// @JsonIgnore
+ @JsonIgnore
  @ManyToOne(fetch = FetchType.LAZY, optional = false)
  @JoinColumn(name = "category_id", nullable = false)
     Category category;

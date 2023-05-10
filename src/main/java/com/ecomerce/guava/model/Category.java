@@ -1,5 +1,7 @@
 package com.ecomerce.guava.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
@@ -30,8 +32,9 @@ public class Category {
 
    private @NotBlank String imagePath;
 
-//    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY,
-//    cascade = CascadeType.ALL)
-//    Set<Product> products;
+//    @JsonManagedReference
+   @OneToMany(mappedBy = "category", fetch = FetchType.EAGER,
+    cascade = CascadeType.ALL)
+    Set<Product> products;
 
 }

@@ -1,6 +1,7 @@
 package com.ecomerce.guava.dto;
 
 import com.ecomerce.guava.model.Category;
+import com.ecomerce.guava.model.Product;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.util.StringUtils;
@@ -10,6 +11,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.util.Base64;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -31,6 +33,10 @@ public class CategoryDto {
     private String description;
 
     private String imagePath;
+//
+//    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY,
+//            cascade = CascadeType.ALL)
+//    Set<Product> products;
 
 //    public CategoryDto(Category category, MultipartFile file) {
 //        this.setId(category.getId());
