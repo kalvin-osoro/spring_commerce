@@ -9,8 +9,10 @@ import com.ecomerce.guava.service.CategoryService;
 import com.ecomerce.guava.service.FileStorageService;
 import com.ecomerce.guava.service.ProductService;
 import com.ecomerce.guava.service.impl.CategoryServiceImpl;
+import com.ecomerce.guava.utils.Helper;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.resource.beans.internal.Helper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
@@ -49,14 +51,30 @@ public class CategoryController {
 
     //create category
     @PostMapping("/add-category")
-
     public ResponseEntity<ApiResponse> addCategory(@RequestParam("categoryDetails") String categoryDetails,
                                                   @RequestParam ("image") MultipartFile img) {
 
+        ObjectMapper objectMapper = new ObjectMapper();
+        Category category;
+        try {
+            category = objectMapper.readValue(categoryDetails, Category.class);
+        } catch (JsonProcessingException e) {
+            return new ResponseEntity<>(new ApiResponse(false, "Error converting Category details"), HttpStatus.BAD_REQUEST);
+        }
 
+        if (categoryService.isCategoryNameExists(category.getCategoryName())) {
+            return new ResponseEntity<>(new ApiResponse(false, "Category already exists"), HttpStatus.CONFLICT);
+        }
 
-        Object category = categoryService.addNewCategory(categoryDetails,img);
-        boolean success = category != null;
+//        if (Helper.notNull(categoryService.readCategory(category.getCategoryName()))) {
+//            return new ResponseEntity<>(new ApiResponse(false, "Category already exists"), HttpStatus.CONFLICT);
+//        }
+
+//        Category savedCategory = categoryService.addNewCategory(categoryDetails, img);
+//        boolean success = savedCategory != null;
+
+        Object category1 = categoryService.addNewCategory(categoryDetails,img);
+        boolean success = category1 != null;
 
         //response
         if (success) {

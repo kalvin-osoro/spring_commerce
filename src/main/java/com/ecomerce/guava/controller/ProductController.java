@@ -49,7 +49,7 @@ public class ProductController {
 //        return new ResponseEntity<>(productList, HttpStatus.OK);
 //    }
     //code that does the job
-    @GetMapping("/p")
+    @GetMapping("/")
     public ResponseEntity<List<ProductDto>> getProducts() {
         List<ProductDto> products = productService.getProducts();
         return new ResponseEntity<>(products,HttpStatus.OK);

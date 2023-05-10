@@ -1,5 +1,9 @@
 server:
   port: 8080
+
+cors:
+  allowed-origins: "*"
+
 spring:
   server:
     port: 8085
@@ -7,8 +11,7 @@ spring:
 
 
 
-  cors:
-    allowed-origins: "*"
+
 
 #  jdbc:mysql://localhost:3306/guava?useSSL=false&serverTimeZone=UTC*useLegacyDateTimeCode=false
 #  jdbc:mysql://containers-us-west-45:

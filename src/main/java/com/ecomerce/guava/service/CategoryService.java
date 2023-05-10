@@ -23,4 +23,8 @@ public interface CategoryService {
     boolean findById(Long categoryId);
 
     public void deleteCategory(Long categoryId);
+
+    Category readCategory(String categoryName);
+
+    boolean isCategoryNameExists(String categoryName);
 }

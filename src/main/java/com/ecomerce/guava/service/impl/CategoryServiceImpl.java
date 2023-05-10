@@ -167,9 +167,21 @@ public class CategoryServiceImpl implements CategoryService {
         categoryRepo.delete(category);
     }
 
+
     @Override
     public List<Category> getAllCategories() {
         return categoryRepo.findAll();
+    }
+
+    @Override
+    public Category  readCategory(String categoryName) {
+        return categoryRepo.findByCategoryName(categoryName);
+    }
+
+    @Override
+    public boolean isCategoryNameExists(String categoryName) {
+        Category category = categoryRepo.findByCategoryName(categoryName);
+        return category !=null;
     }
 
     @Override
