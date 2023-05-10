@@ -16,7 +16,7 @@ import java.nio.file.StandardCopyOption;
 @Service
 public class ImageServiceImpl implements ImageService {
 //    @Value("${image.upload.directory}")
-    @Value("${spring.servlet.multipart.location}")
+//    @Value("${spring.servlet.multipart.location}")
     private String uploadDir;
 
     public String saveImage(MultipartFile file) throws IOException {
