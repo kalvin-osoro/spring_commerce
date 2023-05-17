@@ -55,6 +55,8 @@ public class ProductController {
         return new ResponseEntity<>(products,HttpStatus.OK);
     }
 
+
+    //controller for products 
     @PostMapping("/add-product")
     public ResponseEntity<ApiResponse> addProduct(@RequestParam("productDetails") String productDetails,
                                                   @RequestParam("img") MultipartFile img) {
