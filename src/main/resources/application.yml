@@ -10,9 +10,11 @@ spring:
     name: http://localhost:8080/
 
   datasource:
-    url: jdbc:mysql://localhost:3306/guava
-    username: root
-    driver-class-name: com.mysql.jdbc.Driver
+#    url: jdbc:mysql://localhost:3306/guava
+    url: jdbc:sqlserver://guava-server.database.windows.net:1433;database=guava-db;encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;
+    username: kalvin
+    password: Athena@0057
+#    driver-class-name: com.mysql.jdbc.Driver
   jpa:
     hibernate:
       ddl-auto: update
@@ -21,6 +23,7 @@ spring:
       hibernate:
         format_sql: true
     database: mysql
+
 
 
 

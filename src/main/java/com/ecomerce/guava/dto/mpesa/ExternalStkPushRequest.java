@@ -10,7 +10,8 @@ import lombok.Data;
 public class ExternalStkPushRequest {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+//	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY, generator = "native")
 	private Long id;
 
 	@JsonProperty("TransactionType")

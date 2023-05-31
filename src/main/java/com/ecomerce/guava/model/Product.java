@@ -43,19 +43,5 @@ public class Product {
  @JoinColumn(name = "category_id", nullable = false)
     Category category;
 
-//    @JsonIgnore
-//    @OneToMany(fetch = FetchType.LAZY, mappedBy = "product")
-//    private List<Cart> carts;
-
-//    public Product(ProductDto productDto, Category category) {
-//        this.name = productDto.getName();
-////        this.brand = productDto.getBrand();
-////        this.imageURL = productDto.getImageURL();
-//        this.description = productDto.getDescription();
-//        this.price = productDto.getPrice();
-//        this.category = category;
-//    }
-
-
 }
 
