@@ -10,31 +10,54 @@ spring:
     name: http://localhost:8080/
 
   datasource:
-#    url: jdbc:mysql://localhost:3306/guava
+    #    url: jdbc:mysql://localhost:3306/guava
     url: jdbc:sqlserver://guava-server.database.windows.net:1433;database=guava-db;encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;
     username: kalvin
     password: Athena@0057
-#    driver-class-name: com.mysql.jdbc.Driver
+    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+  #    driver-class-name: com.mysql.jdbc.Driver
+  #jdk version changed to 17
+
+  #  jpa:
+  #    hibernate:
+  #      dialect: org.hibernate.dialect.SQLServerDialect
+  #      ddl-auto: update
+  #    show-sql: false
+  #    properties:
+  #      hibernate:
+  #        format_sql: true
+  #    database: mysql
+
+  #  jpa:
+  #    properties:
+  #      hibernate:
+  #        dialect: org.hibernate.dialect.SQLServerDialect
+  #        ddl-auto: update
+  #      show-sql: false
+  #      format-sql: true
+  #    database: SQL_SERVER
+
   jpa:
     hibernate:
+      dialect: org.hibernate.dialect.SQLServerDialect
       ddl-auto: update
     show-sql: false
     properties:
       hibernate:
         format_sql: true
-    database: mysql
+    database: SQL_SERVER
 
 
 
 
-#  jdbc:mysql://localhost:3306/guava?useSSL=false&serverTimeZone=UTC*useLegacyDateTimeCode=false
-#  jdbc:mysql://containers-us-west-45:
-#    railway:
-#      app:5633/railway?useSSL=false&serverTimeZone=UTC*useLegacyDateTimeCode=false:
-#
-#  jdbc:mysql://containers-us-west-45.railway.app:5633/railway?useSSL=false&serverTimeZone=UTC*useLegacyDateTimeCode=false:
+  #  jdbc:mysql://localhost:3306/guava?useSSL=false&serverTimeZone=UTC*useLegacyDateTimeCode=false
+  #  jdbc:mysql://containers-us-west-45:
+  #    railway:
+  #      app:5633/railway?useSSL=false&serverTimeZone=UTC*useLegacyDateTimeCode=false:
+  #
+  #  jdbc:mysql://containers-us-west-45.railway.app:5633/railway?useSSL=false&serverTimeZone=UTC*useLegacyDateTimeCode=false:
 
-#    database-platform: org.hibernate.dialect.MySQLInnoDBDialect
+  #    database-platform: org.hibernate.dialect.MySQLInnoDBDialect
 
   debug: true
 
