@@ -3,7 +3,8 @@ server:
 spring:
   server:
     port: 8085
-    name: http://localhost:8080/
+#    name: http://localhost:8080/
+    name: https://springcommerce-production.up.railway.app/
 
 
 
