@@ -42,12 +42,12 @@ public class ProductController {
 
 
 
-    //get all products
-//    @GetMapping("/")
-//    public ResponseEntity<List<Product>> getAllProducts() {
-//        List<Product> productList = productService.getAllProducts();
-//        return new ResponseEntity<>(productList, HttpStatus.OK);
-//    }
+//    get all products
+    @GetMapping("/")
+    public ResponseEntity<List<Product>> getAllProducts() {
+        List<Product> productList = productService.getAllProducts();
+        return new ResponseEntity<>(productList, HttpStatus.OK);
+    }
     //code that does the job
     @GetMapping("/p")
     public ResponseEntity<List<ProductDto>> getProducts() {
