@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,8 +21,13 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class AuthTokenFilter extends OncePerRequestFilter {
 
-    private final JwtUtils jwtUtils;
-    private final UserDetailsServiceImpl userDetailsService;
+
+//   it affects AuthTokenFilter() of webSecurityConfig
+    @Autowired
+     private JwtUtils jwtUtils;
+
+    @Autowired
+    private  UserDetailsServiceImpl userDetailsService;
 
     private static final org.slf4j.Logger logger = (Logger) LoggerFactory.getLogger(AuthTokenFilter.class);
 
