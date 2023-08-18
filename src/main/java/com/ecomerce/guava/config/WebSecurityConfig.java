@@ -39,24 +39,26 @@ public class WebSecurityConfig {
 
         return authProvider;
     }
-    @Bean
-    private PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
 
     @Bean
-    AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig)
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig)
         throws Exception {
         return authConfig.getAuthenticationManager();
     }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable()
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-                .authorizeHttpRequests().requestMatchers("/user/**").permitAll()
-                .requestMatchers("user/**").permitAll()
+                .authorizeHttpRequests().requestMatchers("/api/auth/**").permitAll()
+                .requestMatchers("/api/test/**").permitAll()
                 .anyRequest().authenticated();
 
         http.authenticationProvider(authenticationProvider());

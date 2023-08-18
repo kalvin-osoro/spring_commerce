@@ -20,7 +20,7 @@ spring:
 
 #  localhost=====================================================
   datasource:
-    url: jdbc:mysql://localhost:3306/guava?useSSL=false&serverTimeZone=UTC*useLegacyDateTimeCode=false
+    url: jdbc:mysql://localhost:3306/guava?useSSL=false
     username: root
     driver-class-name: com.mysql.cj.jdbc.Driver
 

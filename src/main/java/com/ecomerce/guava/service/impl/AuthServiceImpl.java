@@ -7,21 +7,27 @@ import com.ecomerce.guava.payload.request.SignupRequest;
 import com.ecomerce.guava.payload.response.MessageResponse;
 import com.ecomerce.guava.repository.RoleRepository;
 import com.ecomerce.guava.repository.UserRepository;
+import com.ecomerce.guava.service.AuthService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
 import java.util.Set;
 
-@RequiredArgsConstructor
+//@RequiredArgsConstructor
 @Service
-public class AuthServiceImpl {
+public class AuthServiceImpl implements AuthService {
 
-    private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
-    private final PasswordEncoder passwordEncoder;
+   @Autowired
+    private  UserRepository userRepository;
+   @Autowired
+   private  RoleRepository roleRepository;
+   @Autowired
+   private  PasswordEncoder passwordEncoder;
 
+    @Override
     public MessageResponse registerUser(SignupRequest signupRequest) {
         if (userRepository.existsByUsername(signupRequest.getUsername())) {
             return new MessageResponse("Error: Username is already taken!");
