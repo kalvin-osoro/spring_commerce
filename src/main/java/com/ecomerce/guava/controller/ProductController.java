@@ -30,7 +30,8 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/product")
+@RequestMapping("/home/product")
+//@RequestMapping("/product")
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*")
 public class ProductController {
