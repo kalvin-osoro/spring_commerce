@@ -50,11 +50,10 @@ public class UserServiceImpl implements UserService {
             throw new RuntimeException(e);
         }
         //save the user
-//        User user = new User(signupDto.getFirstName(), signupDto.getLastName(), signupDto.getEmail(),encryptedPassword);
+//        User user = new User(signupDto.getUsername(), signupDto.getEmail(),encryptedPassword);
 //        userRepository.save(user);
         User user = new User();
-        user.setFirstName(signupDto.getFirstName());
-        user.setLastName(signupDto.getLastName());
+        user.setUsername(signupDto.getUsername());
         user.setEmail(signupDto.getEmail());
         user.setPassword(encryptedPassword);
 

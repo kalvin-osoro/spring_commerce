@@ -30,7 +30,8 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/product")
+@RequestMapping("/home/product")
+//@RequestMapping("/product")
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*")
 public class ProductController {
@@ -42,12 +43,12 @@ public class ProductController {
 
 
 
-    //get all products
-//    @GetMapping("/")
-//    public ResponseEntity<List<Product>> getAllProducts() {
-//        List<Product> productList = productService.getAllProducts();
-//        return new ResponseEntity<>(productList, HttpStatus.OK);
-//    }
+//    get all products
+    @GetMapping("/")
+    public ResponseEntity<List<Product>> getAllProducts() {
+        List<Product> productList = productService.getAllProducts();
+        return new ResponseEntity<>(productList, HttpStatus.OK);
+    }
     //code that does the job
     @GetMapping("/")
     public ResponseEntity<List<ProductDto>> getProducts() {

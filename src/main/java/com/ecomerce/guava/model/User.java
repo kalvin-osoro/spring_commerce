@@ -3,6 +3,9 @@ package com.ecomerce.guava.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @RequiredArgsConstructor
 @Getter
 @Setter
@@ -13,11 +16,9 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "first_name", nullable = false)
-    private String firstName;
+    @Column(name = "username", nullable = false)
+    private String username;
 
-    @Column(name = "last_name", nullable = false)
-    private String lastName;
 
     @Column(name = "email", nullable = false)
     private String email;
@@ -25,9 +26,13 @@ public class User {
     @Column(name = "password", nullable = false)
     private String password;
 
-    public User(String firstName, String lastName, String email, String password) {
-       this.firstName = firstName;
-       this.lastName = lastName;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"),
+    inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<Role> roles = new HashSet<>();
+
+    public User(String username,String email, String password) {
+       this.username = username;
        this.email = email;
        this.password = password;
 

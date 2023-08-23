@@ -30,7 +30,7 @@ import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/category")
+@RequestMapping("/home/category")
 //@CrossOrigin(origins = "http://localhost:8090")
 @CrossOrigin(origins = "*")
 public class CategoryController {

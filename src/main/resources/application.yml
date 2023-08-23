@@ -1,55 +1,16 @@
 server:
-  port: 8080
-
-cors:
-  allowed-origins: "*"
-
+  port: 8000
 spring:
   server:
     port: 8085
-    name: http://localhost:8080/
-
-  datasource:
-    #    url: jdbc:mysql://localhost:3306/guava
-    url: jdbc:sqlserver://guava-server.database.windows.net:1433;database=guava-db;encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;
-    username: kalvin
-    password: Athena@0057
-    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
-  #    driver-class-name: com.mysql.jdbc.Driver
-  #jdk version changed to 17
-
-  #  jpa:
-  #    hibernate:
-  #      dialect: org.hibernate.dialect.SQLServerDialect
-  #      ddl-auto: update
-  #    show-sql: false
-  #    properties:
-  #      hibernate:
-  #        format_sql: true
-  #    database: mysql
-
-  #  jpa:
-  #    properties:
-  #      hibernate:
-  #        dialect: org.hibernate.dialect.SQLServerDialect
-  #        ddl-auto: update
-  #      show-sql: false
-  #      format-sql: true
-  #    database: SQL_SERVER
-
-  jpa:
-    hibernate:
-      dialect: org.hibernate.dialect.SQLServerDialect
-      ddl-auto: update
-    show-sql: false
-    properties:
-      hibernate:
-        format_sql: true
-    database: SQL_SERVER
+    #    name: http://localhost:8080/
+    name: https://springcommerce-production.up.railway.app/
 
 
 
-#ll
+  cors:
+    allowed-origins: "*"
+
   #  jdbc:mysql://localhost:3306/guava?useSSL=false&serverTimeZone=UTC*useLegacyDateTimeCode=false
   #  jdbc:mysql://containers-us-west-45:
   #    railway:
@@ -57,9 +18,36 @@ spring:
   #
   #  jdbc:mysql://containers-us-west-45.railway.app:5633/railway?useSSL=false&serverTimeZone=UTC*useLegacyDateTimeCode=false:
 
+  #  localhost=====================================================
+  #  datasource:
+  #    url: jdbc:mysql://localhost:3306/guava?useSSL=false
+  #    username: root
+  #    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  #  =================================================================
+  #  railway================================================================
+  datasource:
+    url: jdbc:mysql://${PROD_DB_HOST}:${PROD_DB_PORT}/${PROD_DB_NAME}
+    username: ${PROD_DB_USERNAME}
+    password: ${PROD_DB_PASSWORD}
+    name: guava
+  #  =======================================================================
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+    database: mysql
   #    database-platform: org.hibernate.dialect.MySQLInnoDBDialect
 
   debug: true
+
+guava:
+  app:
+    jwtSecret: guavasecretmkllmvlksamclsmclmacmdfsdcsdsjklmcdlksmcklsmcklmc
+    jwtExpirationMs: 86400000 #24hrs
 
   servlet:
     multipart:
@@ -69,23 +57,5 @@ spring:
 
   STRIPE_SECRET_KEY: sk_test_51MevffJ7qeZtbDAlnjOB9rNdQVtptp7nelM4vP8JVXDJUafp2LVEdpOv1PQ7HDTyo8zQt9laJeN56Sbco0SQjDRy00Tk5xLMiu
 
-  BASEURL: http://localhost:8080/
-
-mpesa:
-  daraja:
-    consumer-key: nDwzJ2PdcD7nfPoQnDsADRxRTsBmMydP
-    consumer-secret: 0QlHgIcRUOovGtaH
-    grant-type: client_credentials
-    oauth-endpoint: https://sandbox.safaricom.co.ke/oauth/v1/generate
-    shortcode: 601426
-    responseType: completed
-    confirmation-url: https://6463-41-80-113-229.ngrok-free.app/mobile-money/confirmation
-    validation-url: https://6463-41-80-113-229.ngrok-free.app/mobile-money/validation
-    register-url-endpoint: https://sandbox.safaricom.co.ke/mpesa/c2b/v1/registerurl
-    simulate-transaction-endpoint: https://sandbox.safaricom.co.ke/mpesa/c2b/v1/simulate
-
-    stkPassKey: bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919
-    stkPushShortCode: 174379
-    stkPushRequestUrl: https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest
-    stkPushRequestCallbackUrl: https://6463-41-80-113-229.ngrok-free.app/stk-transaction-result
-
+  #  BASEURL: http://localhost:8080/
+  BASEURL: https://springcommerce-production.up.railway.app/
