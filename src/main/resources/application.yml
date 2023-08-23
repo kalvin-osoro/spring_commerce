@@ -46,7 +46,7 @@ spring:
 
 guava:
   app:
-    jwtSecret: guavasecretmkllmvlksamclsmclmacmdfsdcs
+    jwtSecret: guavasecretmkllmvlksamclsmclmacmdfsdcsdsjklmcdlksmcklsmcklmc
     jwtExpirationMs: 86400000 #24hrs
 
   servlet:
